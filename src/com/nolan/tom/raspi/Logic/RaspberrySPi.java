@@ -1,12 +1,19 @@
 package com.nolan.tom.raspi.Logic;
 
-import com.nolan.tom.raspi.Services.JsonHandler;
+import java.util.concurrent.ExecutionException;
+import org.json.JSONException;
+
+import android.os.AsyncTask;
+
+import com.nolan.tom.raspi.Services.*;
 
 public class RaspberrySPi {
 	//static instance of raspberrySPi
 	private static RaspberrySPi raspberrySpi;
 	//the user currently logged in
 	private User userloggedin ;
+	private boolean userOk;
+	private AsyncTask Async_Task;
 	
 	
 	/**  
@@ -16,6 +23,7 @@ public class RaspberrySPi {
 	 */
 	private RaspberrySPi()
 	{	 
+		userOk = false;
 	}
 	/**  
 	 * Return the instance of 
@@ -30,19 +38,45 @@ public class RaspberrySPi {
 		}
 		return raspberrySpi;
 	}
+	
+	
+	
+	/*
+	 * *************** getter and setter methods
+	 */
+	//userOk
+	public void setUserOk(boolean b)
+	{
+		this.userOk = b;
+	}
+	public boolean getUserOk()
+	{
+		return this.userOk;
+	}
+	//userloggedin
+	public User getUserloggedin() {
+		return userloggedin;
+	}
+	public void setUserloggedin(User userloggedin) {
+		this.userloggedin = userloggedin;
+	}
+	
+	
+	
+	
+	
 	/**  
 	 * Register a new user 
 	 * @param username the unique of the user
 	 * @param password the password the user will use to log into the app
+	 * @return 
 	 * @return RaspberrySPi
+	 * @throws JSONException 
 	 */
-	public boolean registerNewUser(String username, String password)
+	public void registerNewUser(String username, String password) 
 	{
-		boolean nameOK = false;
 		User newUser = new User(username, password);
-		JsonHandler.postUser(newUser,"register");
-		return nameOK ;
-			
+		Async_Task = new postUserTask().execute(newUser,"register");
 	}
 	/**
 	 * Check if user Exists
@@ -50,15 +84,31 @@ public class RaspberrySPi {
 	 * @param the password entered
 	 * @return Boolean
 	 */
-	public boolean checkUser(String username, String password)
+	public void checkUser(String username, String password)
 	{
-		boolean userOk =false;
-		
 		User newUser = new User(username, password);
-		JsonHandler.postUser(newUser,"login");
-		return userOk;
+		Async_Task = new postUserTask().execute(newUser,"login");
 	}
 	
+	/**
+	 * Return notifications for this user
+	 * @return Notification Array
+	 */
+	public Notification[] getNotifications()
+	{
+		return null;
+		
+	}
+	
+	/**
+	 * stream Video linked to a notification
+	 * @return void
+	 */
+	public void streamVideo(Notification notification)
+	{
+		//getVideo from cloud... 
+		
+	}
 	
 	
 }

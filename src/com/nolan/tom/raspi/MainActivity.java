@@ -1,5 +1,7 @@
 package com.nolan.tom.raspi;
 
+
+
 import com.nolan.tom.raspi.Logic.RaspberrySPi;
 
 import android.os.Bundle;
@@ -18,7 +20,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Intent intent = new Intent(this, Register_User.class);
+		final int TimeOut = 1000;
+		
+		final Intent reg_Intent = new Intent(this, Register_User.class);
+		final Intent main_Intent = new Intent(this, MainMenu.class);
 		final RaspberrySPi raspb = RaspberrySPi.getInstance();
 		final EditText username = (EditText) findViewById(R.id.Username);
 		final EditText password = (EditText) findViewById(R.id.password);
@@ -30,10 +35,23 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				raspb.registerNewUser(username.getText().toString(), password.getText().toString());
-				
+					try {
+						
+						raspb.checkUser(username.getText().toString(), password.getText().toString());
+						for(int t =0; t<= TimeOut;t++)
+						{
+							if(raspb.getUserOk())
+							{
+								startActivity(main_Intent);
+							}
+						}
+						
+ 					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 			}
-		});//end of on click
+		});//end of on click listener
 		
 		//Redirect to Register
 		register.setOnClickListener(new View.OnClickListener() {
@@ -41,7 +59,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+				startActivity(reg_Intent);
 			}
 		});
 	}

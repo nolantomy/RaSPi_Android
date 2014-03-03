@@ -8,5 +8,6 @@
     <string name="LoginButton">Login</string>
     <string name="title_activity_register__user">Register</string>
     <string name="login_Btn">Login</string>
+    <string name="title_activity_main_menu">MainMenu</string>
 
 </resources>
